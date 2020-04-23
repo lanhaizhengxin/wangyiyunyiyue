@@ -1,28 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Button } from 'antd-mobile';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React, { Component } from 'react';
+import './App.scss';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import routes from "./router/index.js"
 
-import News from './components/News';
-import Contents from './components/Contents';
-
-function App() {
+console.log(routes)
+function RouteWithSubRoutes(route) {
+  console.log(<Route
+    path={route.path}
+    render={props => (
+      <route.component {...props} routes={route.routes} />
+    )}
+  />)
   return (
-    <Router>
-          <div>           
-
-              <header className="title">
-                <Link to="/news">新闻</Link>
-                <br />
-                <Link to="/content">详情</Link>
-
-              </header>
-              <Route path="/news" component={News} />    
-              <Route path="/content" component={Contents} />                 
-          </div>
-      </Router>
+    <Route
+      path={route.path}
+      render={props => (
+        <route.component {...props} routes={route.routes} />
+      )}
+    />
   );
+}
+class App extends Component{
+  render() {
+    return (
+      <Router>
+        <Switch>
+          {routes.map((route, i) => (
+            <RouteWithSubRoutes key={i} {...route} />
+          ))}
+        </Switch>
+      </Router>
+    )
+  }
 }
 
 export default App;
